@@ -5,7 +5,7 @@ import {TodoForm, TodoList, Footer} from './components/todo'
 import {addTodo, generateId, findById, toggleTodo, updateTodo, removeTodo, filterTodos} from './lib/TodoHelpers'
 import {pipe, partial} from './lib/utils'
 import PropTypes from 'prop-types';
-import {loadTodos} from './lib/todoService';
+import {loadTodos, saveTodo, deleteTodo} from './lib/todoService';
 
 class App extends Component {
 
@@ -18,17 +18,26 @@ class App extends Component {
         route: PropTypes.string
     }
 
+    showTempMessage = (msg) => {
+        this.setState({message: msg})
+        setTimeout(() => this.setState({message: ''}), 2500)
+    }
+
     componentDidMount() {
         loadTodos()
             .then(todos => this.setState({todos}))
     }
 
     handleToggle = (id) => {
-        const getUpdatedTodos = pipe(findById, toggleTodo, partial(updateTodo, this.state.todos))
-        const updatedTodos = getUpdatedTodos(id, this.state.todos)
+        const getToggledTodo = pipe(findById, toggleTodo)
+        const updated = getToggledTodo(id, this.state.todos)
+        const getUpdatedTodos = partial(updateTodo, this.state.todos)
+        const updatedTodos = getUpdatedTodos(updated)
         this.setState({
             todos: updatedTodos
         })
+        saveTodo(updated)
+            .then(() => this.showTempMessage('Todo updated'))
     }
 
     handleRemove = (id, evt) => {
@@ -37,6 +46,9 @@ class App extends Component {
         this.setState({
             todos: updatedTodos
         })
+        deleteTodo(id)
+            .then(() => this.showTempMessage('Todo removed'))
+            .catch(() => this.showTempMessage('Todo removed failed'))
     }
 
     handleSubmit = (evt) => {
@@ -48,6 +60,8 @@ class App extends Component {
             currentTodo: '',
             errorMessage: ''
         })
+        saveTodo(newTodo)
+            .then(() => this.showTempMessage('Todo added'))
     }
 
     handleEmptySubmit = (evt) => {
@@ -74,6 +88,7 @@ class App extends Component {
                 </header>
                 <div className="Todo-App">
                     {this.state.errorMessage && <span className="error">{this.state.errorMessage}</span>}
+                    {this.state.message && <span className="success">{this.state.message}</span>}
                     <TodoForm
                         handleInputChange={this.handleInputChange}
                         currentTodo={this.state.currentTodo}

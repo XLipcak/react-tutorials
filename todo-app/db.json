@@ -13,12 +13,7 @@
     {
       "id": 3,
       "name": "Connect to Server",
-      "isComplete": false
-    },
-    {
-      "id": 4,
-      "name": "Setup fetch",
-      "isComplete": false
+      "isComplete": true
     }
   ]
 }
