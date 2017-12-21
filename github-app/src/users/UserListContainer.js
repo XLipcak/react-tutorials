@@ -1,38 +1,31 @@
 import React from 'react'
-import {UserList} from "../components/UserList";
+import {UserList} from "./UserList";
 import {loadUsers} from "../service/githubService";
-import InputFilter from '../components/InputFilter';
+import UserListFilter from "./UserListFilter";
 
 export class UserListContainer extends React.Component {
 
     state = {
         filter: {
-            name: {
-                value: '',
-                label: 'Name: '
-            },
-            repos: {
-                value: 0,
-                label: 'Min repos: '
-            }
+            name: '',
+            repos: 0
         },
         users: [],
         fetchState: 'loading'
-    };
+    }
 
-    filterChanged = (newVal, keyProp) => {
-        const actualFilter = Object.assign(this.state.filter);
-        actualFilter[keyProp].value = newVal;
+    filterChanged = (filter) => {
         this.setState({
             fetchState: 'loading',
-            filter: actualFilter,
+            filter,
             users: []
-        });
-        this.updateUserState();
-    };
+        })
 
-    updateUserState() {
-        loadUsers(this.state.filter['name'].value, this.state.filter['repos'].value)
+        this.updateUserState(filter)
+    }
+
+    updateUserState(filter) {
+        loadUsers(filter)
             .then(response => {
                 this.setState({
                     users: response.items,
@@ -48,16 +41,14 @@ export class UserListContainer extends React.Component {
     }
 
     componentDidMount() {
-        this.updateUserState();
+        this.updateUserState(this.state.filter);
     }
 
     render() {
         const {filter} = this.state;
         return (
             <div>
-                <InputFilter filter={filter} keyProp={'name'} onChange={this.filterChanged}/>
-                <InputFilter filter={filter} keyProp={'repos'} onChange={this.filterChanged}
-                             type={'range'} min={1} max={100}/>
+                <UserListFilter value={filter} onChange={this.filterChanged}/>
 
                 {this.state.fetchState !== 'success' ? <h1> {this.state.fetchState} </h1> :
                     <UserList users={this.state.users}/>}
