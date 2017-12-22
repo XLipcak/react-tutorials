@@ -1,21 +1,8 @@
-import React, {Component} from 'react';
+import React from 'react';
 import './App.css';
-import {UserListContainer} from "./users/UserListContainer";
+import {RoutingContainer} from "./routing/RoutingContainer";
 
-class App extends Component {
 
-    render() {
-        return (
-            <div className="App">
-                <h1>
-                    GitHub Users
-                </h1>
-                <hr/>
-
-                <UserListContainer/>
-            </div>
-        );
-    }
-}
+const App = () => <RoutingContainer/>
 
 export default App;
