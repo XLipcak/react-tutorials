@@ -9,3 +9,12 @@ a, a:visited {
 a.active {
     color: red;
 }
+
+.header {
+    border: 1px solid blue;
+}
+
+.content {
+    margin-top: 5px;
+    border: 1px solid red;
+}
