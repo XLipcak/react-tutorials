@@ -5,8 +5,7 @@ import InputFilter from "../common/InputFilter";
 class UserListContainer extends React.Component {
 
     onFilterChange = (value, name) => {
-        const {value:filter, onChange} = this.props
-
+        const {value:filter, onChange} = this.props;
         onChange({...filter, [name]: value});
     }
 
