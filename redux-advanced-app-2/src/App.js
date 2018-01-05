@@ -4,6 +4,8 @@ import './App.css';
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
 import Message from "./components/Message";
+import Footer from "./components/Footer";
+import {BrowserRouter as Router} from 'react-router-dom'
 
 class App extends Component {
     render() {
@@ -13,11 +15,14 @@ class App extends Component {
                     <img src={logo} className="App-logo" alt="logo"/>
                     <h1 className="App-title">Welcome to React</h1>
                 </header>
-                <div className="Todo-App">
-                    <Message/>
-                    <TodoForm/>
-                    <TodoList/>
-                </div>
+                <Router>
+                    <div className="Todo-App">
+                        <Message/>
+                        <TodoForm/>
+                        <TodoList/>
+                        <Footer/>
+                    </div>
+                </Router>
             </div>
         );
     }

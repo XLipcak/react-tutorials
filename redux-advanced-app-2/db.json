@@ -27,7 +27,7 @@
     },
     {
       "name": "New Todo",
-      "isComplete": false,
+      "isComplete": true,
       "id": 6
     },
     {
@@ -37,7 +37,7 @@
     },
     {
       "name": "123",
-      "isComplete": false,
+      "isComplete": true,
       "id": 8
     },
     {
@@ -46,24 +46,9 @@
       "id": 9
     },
     {
-      "name": "eee",
-      "isComplete": false,
-      "id": 10
-    },
-    {
-      "name": "hehe",
-      "isComplete": false,
-      "id": 11
-    },
-    {
       "name": "grr",
       "isComplete": false,
       "id": 12
-    },
-    {
-      "name": "aaaa",
-      "isComplete": false,
-      "id": 13
     },
     {
       "name": "a",
