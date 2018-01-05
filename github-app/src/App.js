@@ -1,10 +1,9 @@
 import React from 'react';
 import './App.css';
-import AuthRoutingContainer from "./routing/RoutingContainer";
+import RoutingContainer from "./routing/RoutingContainer";
 
-
-const App = () => (
-    <AuthRoutingContainer/>
+const GitHubApp = () => (
+    <RoutingContainer/>
 )
 
-export default App
+export default GitHubApp

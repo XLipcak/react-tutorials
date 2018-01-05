@@ -1,12 +1,13 @@
-const loginReducer = (state = {logged: false}, action) => {
+const loginReducer = (state = {isAuthenticated: true}, action) => {
+    console.log(action)
     switch (action.type) {
         case 'LOGIN':
             return {
-                logged: true
+                isAuthenticated: true
             };
         case 'LOGOUT':
             return {
-                logged: false
+                isAuthenticated: false
             };
         default:
             return state;

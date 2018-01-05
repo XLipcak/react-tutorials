@@ -1,18 +1,19 @@
 import React from 'react'
 import {UserListContainer} from "../users/UserListContainer";
-import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom'
+import {BrowserRouter as Router, Redirect, Route, Switch, withRouter} from 'react-router-dom'
 import {UserDetail} from "../users/UserDetail";
-import Button from "../common/Button";
 import {login, logout} from "../actions";
 import connect from "react-redux/es/connect/connect";
+import Login from "../common/Login";
+import {fakeAuth} from "../service/authService";
 
-//npm i react-router-dom --save-dev
-
-
-const Header = ({onLogoutClick}) => (
+const Header = () => (
     <Route path="/users" render={() => (
         <div>
-            <Button text='Logout' onButtonClick={onLogoutClick}/>
+            <div className="login-box">
+                <SignOutButton/>
+            </div>
+
             <h1>
                 GitHub App
             </h1>
@@ -21,56 +22,59 @@ const Header = ({onLogoutClick}) => (
     )}/>
 )
 
+
 const Content = () => (
     <div>
-        <Switch>
-            <Route exact path="/users" component={UserListContainer}/>
-            <Route exact path="/users/:id" component={({match}) => <UserDetail id={match.params.id}/>}/>
-            <Redirect to="/users"/>
-        </Switch>
+        <Header/>
+        <div>
+            <Switch>
+                <Route exact path="/users" component={UserListContainer}/>
+                <Route exact path="/users/:id" component={({match}) => <UserDetail id={match.params.id}/>}/>
+                <Redirect to="/users"/>
+            </Switch>
+        </div>
     </div>
 )
 
-const LoginPage = ({onLoginClick}) => (
-    <div>
-        <Switch>
-            <Route exact path="/login" render={() => (
-                <div>
-                    <Button text='Login' onButtonClick={onLoginClick}/>
-                </div>
-            )}/>
-            <Redirect to="/login"/>
-        </Switch>
-    </div>
+const SignOutButton = withRouter(({history}) => (
+    <button onClick={() => {
+        fakeAuth.signout(() => history.push('/'))
+    }}>Sign out</button>
+))
+
+
+const PrivateRoute = ({component: Component, ...rest}) => (
+    <Route {...rest} render={(props) => (
+        props.isAuthenticated === true
+            ? <Component {...props} />
+            : <Redirect to={{
+                pathname: '/login',
+                state: {from: props.location}
+            }}/>
+    )}/>
 )
 
-const ProtectedPage = ({onLogoutClick}) => (
-    <div>
-        <Header onLogoutClick={onLogoutClick}/>
-        < Content/>
-    </div>
-)
 
 class RoutingContainer extends React.Component {
 
     render() {
+        console.log('rerendering')
         return (
             <Router>
                 <div className="App">
-                    {!this.props.logged ?
-                        <LoginPage onLoginClick={this.props.onLoginClick}/>
-                        :
-                        <ProtectedPage onLogoutClick={this.props.onLogoutClick}/>
-                    }
+                    <Switch>
+                        <Route path="/login" render={(props) => <Login onLoginClick={this.props.onLoginClick} {...props}/>}/>
+                        <PrivateRoute {...this.props} path='/' component={Content}/>
+                    </Switch>
                 </div>
             </Router>
         )
     }
 }
 
-const AuthRoutingContainer = connect(
-    (state) => ({logged: state.logged}),
+const ConnectedRoutingContainer = connect(
+    (state) => ({isAuthenticated: state.isAuthenticated}),
     {onLoginClick: login, onLogoutClick: logout},
 )(RoutingContainer)
 
-export default AuthRoutingContainer
+export default ConnectedRoutingContainer
