@@ -3,6 +3,8 @@ import {UserListContainer} from "../users/UserListContainer";
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom'
 import {UserDetail} from "../users/UserDetail";
 import Button from "../common/Button";
+import {login, logout} from "../actions";
+import connect from "react-redux/es/connect/connect";
 
 //npm i react-router-dom --save-dev
 
@@ -29,32 +31,46 @@ const Content = () => (
     </div>
 )
 
-export class RoutingContainer extends React.Component {
+const LoginPage = ({onLoginClick}) => (
+    <div>
+        <Switch>
+            <Route exact path="/login" render={() => (
+                <div>
+                    <Button text='Login' onButtonClick={onLoginClick}/>
+                </div>
+            )}/>
+            <Redirect to="/login"/>
+        </Switch>
+    </div>
+)
+
+const ProtectedPage = ({onLogoutClick}) => (
+    <div>
+        <Header onLogoutClick={onLogoutClick}/>
+        < Content/>
+    </div>
+)
+
+class RoutingContainer extends React.Component {
 
     render() {
         return (
             <Router>
                 <div className="App">
                     {!this.props.logged ?
-                        <div>
-                            <Switch>
-                                <Route exact path="/login" render={() => (
-                                    <div>
-                                        <Button text='Login' onButtonClick={this.props.onLoginClick}/>
-                                    </div>
-                                )}/>
-                                <Redirect to="/login"/>
-                            </Switch>
-                        </div>
+                        <LoginPage onLoginClick={this.props.onLoginClick}/>
                         :
-                        <div>
-                            <Header onLogoutClick={this.props.onLogoutClick}/>
-                            < Content/>
-                        </div>
+                        <ProtectedPage onLogoutClick={this.props.onLogoutClick}/>
                     }
                 </div>
             </Router>
         )
     }
-
 }
+
+const AuthRoutingContainer = connect(
+    (state) => ({logged: state.logged}),
+    {onLoginClick: login, onLogoutClick: logout},
+)(RoutingContainer)
+
+export default AuthRoutingContainer
