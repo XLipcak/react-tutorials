@@ -6,11 +6,6 @@
       "isComplete": true
     },
     {
-      "id": 2,
-      "name": "start server",
-      "isComplete": false
-    },
-    {
       "id": 3,
       "name": "Load data into app",
       "isComplete": false
