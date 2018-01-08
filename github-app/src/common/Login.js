@@ -8,11 +8,11 @@ class Login extends React.Component {
     }
 
 
-    // login = () => {
-    //     this.props.fakeAuth.authenticate(() => {
-    //         this.setState({redirectToReferrer: true})
-    //     })
-    // }
+    login = () => {
+        this.props.onLoginClick();
+        this.setState({redirectToReferrer: true})
+        // setTimeout(() => this.setState({redirectToReferrer: true}), 3000);
+    }
 
     render() {
         const {from} = this.props.location.state || {from: {pathname: '/'}}
@@ -26,10 +26,10 @@ class Login extends React.Component {
 
         return (
             <div>
-                <p>You must log in to view the page at {from.pathname}</p>
-                <Link to={'/users'}>
-                    <button onClick={this.props.onLoginClick}>Log in</button>
-                </Link>
+                <div>
+                    <p>You must log in to view the page at {from.pathname}</p>
+                    <button onClick={this.login}>Log in</button>
+                </div>
             </div>
         )
     }

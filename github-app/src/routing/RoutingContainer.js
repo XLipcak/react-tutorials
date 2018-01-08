@@ -5,13 +5,24 @@ import {UserDetail} from "../users/UserDetail";
 import {login, logout} from "../actions";
 import connect from "react-redux/es/connect/connect";
 import Login from "../common/Login";
-import {fakeAuth} from "../service/authService";
+import Link from "react-router-dom/es/Link";
 
-const Header = () => (
+
+const spanStyle = {
+    color: 'blue',
+    margin: '10px'
+};
+
+const Header = (props) => (
     <Route path="/users" render={() => (
         <div>
             <div className="login-box">
-                <SignOutButton/>
+                <SignOutButton {...props} />
+                <Link to="/users">
+                    <span style={spanStyle}>
+                        Home
+                    </span>
+                </Link>
             </div>
 
             <h1>
@@ -23,9 +34,9 @@ const Header = () => (
 )
 
 
-const Content = () => (
+const Content = (props) => (
     <div>
-        <Header/>
+        <Header {...props}/>
         <div>
             <Switch>
                 <Route exact path="/users" component={UserListContainer}/>
@@ -36,17 +47,17 @@ const Content = () => (
     </div>
 )
 
-const SignOutButton = withRouter(({history}) => (
+const SignOutButton = withRouter(({history, logout}) => (
     <button onClick={() => {
-        fakeAuth.signout(() => history.push('/'))
+        logout(() => history.push('/'))
     }}>Sign out</button>
 ))
 
 
 const PrivateRoute = ({component: Component, ...rest}) => (
     <Route {...rest} render={(props) => (
-        props.isAuthenticated === true
-            ? <Component {...props} />
+        rest.isAuthenticated === true
+            ? <Component {...props} {...rest} />
             : <Redirect to={{
                 pathname: '/login',
                 state: {from: props.location}
@@ -63,7 +74,7 @@ class RoutingContainer extends React.Component {
             <Router>
                 <div className="App">
                     <Switch>
-                        <Route path="/login" render={(props) => <Login onLoginClick={this.props.onLoginClick} {...props}/>}/>
+                        <Route path="/login" render={(props) => <Login onLoginClick={this.props.login} {...props}/>}/>
                         <PrivateRoute {...this.props} path='/' component={Content}/>
                     </Switch>
                 </div>
@@ -74,7 +85,7 @@ class RoutingContainer extends React.Component {
 
 const ConnectedRoutingContainer = connect(
     (state) => ({isAuthenticated: state.isAuthenticated}),
-    {onLoginClick: login, onLogoutClick: logout},
+    {login, logout},
 )(RoutingContainer)
 
 export default ConnectedRoutingContainer
