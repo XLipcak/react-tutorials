@@ -69,12 +69,12 @@ const PrivateRoute = ({component: Component, ...rest}) => (
 class RoutingContainer extends React.Component {
 
     render() {
-        console.log('rerendering')
+        console.log('rerendering' + this.props.isAuthenticated)
         return (
             <Router>
                 <div className="App">
                     <Switch>
-                        <Route path="/login" render={(props) => <Login onLoginClick={this.props.login} {...props}/>}/>
+                        <Route path="/login" render={(props) => <Login {...this.props} {...props}/>}/>
                         <PrivateRoute {...this.props} path='/' component={Content}/>
                     </Switch>
                 </div>
@@ -84,7 +84,7 @@ class RoutingContainer extends React.Component {
 }
 
 const ConnectedRoutingContainer = connect(
-    (state) => ({isAuthenticated: state.isAuthenticated}),
+    (state) => ({isAuthenticated: state.login.isAuthenticated, isFetching: state.isFetching}),
     {login, logout},
 )(RoutingContainer)
 
