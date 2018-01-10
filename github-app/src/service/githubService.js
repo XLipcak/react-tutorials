@@ -1,4 +1,4 @@
-const tokenParam = 'access_token=6d667ca2441f8dafd3ab4179302a3f400c27678c';
+const tokenParam = 'access_token=xxx';
 const usersUrl = 'https://api.github.com/search/users?' + tokenParam + '&q=location%3ABratislava';
 const userDetailUrl = 'https://api.github.com/users/';
 

@@ -69,7 +69,6 @@ const PrivateRoute = ({component: Component, ...rest}) => (
 class RoutingContainer extends React.Component {
 
     render() {
-        console.log('rerendering' + this.props.isAuthenticated)
         return (
             <Router>
                 <div className="App">

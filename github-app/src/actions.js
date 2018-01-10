@@ -3,7 +3,7 @@ export const login = (successCallback, username, password) => {
         dispatch(fetchingAction());
 
         new Promise((resolve, reject) => {
-            console.log('123');
+            console.log('logging in: ' + username + ' ' + password);
             setTimeout(() => {
                 if (username === password) {
                     dispatch(loginAction());
@@ -18,16 +18,14 @@ export const login = (successCallback, username, password) => {
             dispatch(fetchingSuccessAction());
             successCallback();
         }).catch(() => {
-            dispatch(fetchingFailedAction());
             console.log('login fail');
+            dispatch(fetchingFailedAction());
         })
     }
 };
 
-export const logout = (f) => {
-    return {
-        type: 'LOGOUT'
-    }
+export const logout = () => {
+    return logoutAction();
 };
 
 const fetchingAction = () => {

@@ -1,5 +1,5 @@
 const loginReducer = (state = {isAuthenticated: false}, action) => {
-    console.log(action)
+    // console.log(action)
     switch (action.type) {
         case 'LOGIN':
             return {
